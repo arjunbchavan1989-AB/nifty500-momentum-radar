@@ -101,16 +101,16 @@ label.check input { accent-color: var(--accent); }
 table { width: 100%; border-collapse: collapse; }
 th {
   text-align: right; font-size: 10.5px; text-transform: uppercase; letter-spacing: .8px; color: var(--faint);
-  padding: 9px 10px; border-bottom: 1px solid var(--divider); cursor: pointer; user-select: none; white-space: nowrap;
+  padding: 10px 12px; border-bottom: 1px solid var(--divider); cursor: pointer; user-select: none; white-space: nowrap;
   background: var(--panel2); position: sticky; top: 0; z-index: 2;
 }
 th:hover { color: var(--text); }
 th:first-child, td:first-child { text-align: left; }
 th.sort-asc::after { content: " ▲"; color: var(--accent); } th.sort-desc::after { content: " ▼"; color: var(--accent); }
-td { padding: 8px 10px; text-align: right; font-size: 13px; border-bottom: 1px solid var(--divider); white-space: nowrap; }
+td { padding: 9px 12px; text-align: right; font-size: 13px; border-bottom: 1px solid var(--divider); white-space: nowrap; }
 tr.row:hover { background: var(--accent-soft); cursor: pointer; }
 td .sym { font-weight: 700; font-size: 13px; }
-td .sub { display: block; font-size: 10.5px; color: var(--faint); font-weight: 400; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+td .sub { display: block; font-size: 10.5px; color: var(--faint); font-weight: 400; max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
 .pos { color: var(--up); } .neg { color: var(--down); } .flat { color: var(--muted); }
 .badge { display: inline-block; font-size: 9.5px; font-weight: 900; letter-spacing: .5px; padding: 2px 7px; border-radius: 5px; margin-left: 5px; }
 .b-up { background: var(--up-soft); color: var(--up); } .b-down { background: var(--down-soft); color: var(--down); }
@@ -261,13 +261,15 @@ const COLS = [
   { k: 'symbol',      label: 'Stock',       get: r => r.symbol, fmt: (v, r) => `<span class="sym mono">${esc(v)}</span><span class="sub">${esc(r.sector)}</span>` },
   { k: 'close',      label: 'Price',        get: r => r.close, fmt: v => '₹' + nf(v) },
   { k: 'dayChangePct', label: 'Day %',      get: r => r.dayChangePct, fmt: v => cls(v, (v > 0 ? '+' : '') + v.toFixed(2) + '%') },
-  { k: 'volRatio',   label: 'Vol vs 50d',   get: r => r.volRatio, fmt: v => v.toFixed(1) + 'x' },
+  { k: 'avgVol30',   label: '30d Avg Vol',  get: r => r.avgVol30, fmt: v => nf2(v / 1e7) + ' cr' },
+  { k: 'volRatio',   label: 'Vol vs 50d',   get: r => r.volRatio, fmt: (v, r) => v.toFixed(2) + 'x' + (r.volSpike ? bar(Math.min(v, 5) / 5) : '') },
   { k: 'pctFrom52wHigh', label: 'From 52wH', get: r => r.pctFrom52wHigh, fmt: v => cls(v, v.toFixed(1) + '%') },
+  { k: 'newsCount',  label: 'News 7d',      get: r => r.news.length, fmt: v => v ? `<b>${v}</b>` : '<span class="flat">—</span>' },
   { k: 'signals',   label: 'Signals',      get: r => (r.volSpike ? 2 : 0) + (r.move4 ? 1 : 0), fmt: (v, r) =>
       (r.volSpike ? '<span class="badge b-gold">2X VOL</span>' : '') +
       (r.move4 ? `<span class="badge ${r.dayChangePct >= 0 ? 'b-up' : 'b-down'}">${Math.abs(r.dayChangePct).toFixed(1)}%</span>` : '') },
-  { k: 'cats',      label: 'News / Catalysts', get: r => r.news.length,
-    fmt: (v, r) => v ? `<b>${v}</b> ` + catChips(r).join(' ') : '<span class="flat">—</span>' },
+  { k: 'cats',      label: 'Catalysts',    get: r => r.news.reduce((a, n) => { n.tags.forEach(t => a.add(t)); return a; }, new Set()).size,
+    fmt: (v, r) => catChips(r).join(' ') || '<span class="flat">—</span>' },
 ];
 
 /* ---------- helpers ---------- */
@@ -278,19 +280,11 @@ function cls(v, txt) { const s = v > 0 ? 'pos' : (v < 0 ? 'neg' : 'flat'); retur
 function bar(f) { return `<span class="mini-bar"><span style="width:${Math.round(f * 100)}%"></span></span>`; }
 function catColor(cat) { const c = CATS.find(x => x[0] === cat); return c ? c[2] : 'var(--muted)'; }
 function catName(cat) { const c = CATS.find(x => x[0] === cat); return c ? c[1] : cat; }
-function catShort(cat) {
-  const map = { orderWin: 'Order', launch: 'Launch', appointment: 'Appoint', results: 'Results',
-    ma: 'M&A', expansion: 'Expand', partnership: 'Partner', rating: 'Rating', fundraise: 'Funds' };
-  return map[cat] || cat;
-}
 function catChips(r) {
   const counts = {};
   r.news.forEach(n => n.tags.forEach(t => counts[t] = (counts[t] || 0) + 1));
-  const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
-  const more = Object.keys(counts).length - top.length;
-  return top.map(([c, n]) =>
-    `<span class="tagchip" style="color:${catColor(c)};background:color-mix(in oklab, ${catColor(c)} 12%, transparent);">${esc(catShort(c))}${n > 1 ? '×' + n : ''}</span>`)
-    .concat(more > 0 ? [`<span class="tagchip" style="color:var(--faint)">+${more}</span>`] : []);
+  return Object.entries(counts).map(([c, n]) =>
+    `<span class="tagchip" style="color:${catColor(c)};background:color-mix(in oklab, ${catColor(c)} 12%, transparent);">${esc(catName(c))}${n > 1 ? ' ×' + n : ''}</span>`);
 }
 
 /* ---------- render ---------- */
