@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nifty 500 Momentum Radar</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=jetbrains-mono@400,600&display=swap" rel="stylesheet">
+<style>
+:root, [data-theme='dark'] {
+  --bg: #0b0e14; --panel: #12161f; --panel2: #161b26; --border: #232a38; --divider: #1b212d;
+  --text: #e8ecf3; --muted: #8b94a7; --faint: #566073;
+  --accent: #4f8cff; --accent-soft: rgba(79,140,255,.12);
+  --up: #2fbf71; --up-soft: rgba(47,191,113,.12);
+  --down: #f2555a; --down-soft: rgba(242,85,90,.12);
+  --gold: #f5b940; --gold-soft: rgba(245,185,64,.12);
+  --violet: #a78bfa; --violet-soft: rgba(167,139,250,.12);
+  --cyan: #22d3ee; --cyan-soft: rgba(34,211,238,.12);
+  --orange: #fb923c; --orange-soft: rgba(251,146,60,.12);
+  --pink: #f472b6; --pink-soft: rgba(244,114,182,.12);
+}
+[data-theme='light'] {
+  --bg: #f4f6fa; --panel: #ffffff; --panel2: #f7f9fc; --border: #dde3ec; --divider: #e8edf4;
+  --text: #1a2230; --muted: #5b6577; --faint: #8b94a4;
+  --accent: #2f6fe0; --accent-soft: rgba(47,111,224,.10);
+  --up: #149a52; --up-soft: rgba(20,154,82,.10);
+  --down: #d92638; --down-soft: rgba(217,38,56,.10);
+  --gold: #b07f10; --gold-soft: rgba(176,127,16,.10);
+  --violet: #7c4fd8; --violet-soft: rgba(124,79,216,.10);
+  --cyan: #0891b2; --cyan-soft: rgba(8,145,178,.10);
+  --orange: #d1741e; --orange-soft: rgba(209,116,30,.10);
+  --pink: #c2378c; --pink-soft: rgba(194,55,140,.10);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Satoshi', -apple-system, sans-serif; background: var(--bg); color: var(--text);
+  font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+.topbar {
+  position: sticky; top: 0; z-index: 50; background: color-mix(in oklab, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px); border-bottom: 1px solid var(--divider);
+}
+.topbar-inner { max-width: 1400px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo .mark { width: 34px; height: 34px; border-radius: 8px; background: var(--accent-soft); border: 1px solid var(--accent);
+  display: flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 900; font-size: 15px; }
+.logo h1 { font-size: 17px; font-weight: 900; letter-spacing: .4px; }
+.logo h1 span { color: var(--accent); }
+.topbar .meta { font-size: 12px; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+.topbar .meta b { color: var(--text); font-weight: 700; }
+#themeToggle {
+  margin-left: auto; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--panel); color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+#themeToggle:hover { color: var(--text); border-color: var(--accent); }
+
+/* Layout */
+.wrap { max-width: 1400px; margin: 0 auto; padding: 20px 24px 60px; }
+
+/* KPI row */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.kpi { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.kpi .n { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
+.kpi .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-top: 2px; }
+.kpi .s { font-size: 11px; color: var(--faint); margin-top: 3px; }
+.kpi.a .n { color: var(--accent); } .kpi.u .n { color: var(--up); }
+.kpi.d .n { color: var(--down); } .kpi.g .n { color: var(--gold); }
+
+/* Controls */
+.controls { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+.controls-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.controls-row + .controls-row { margin-top: 10px; }
+input[type=text], select {
+  background: var(--panel2); border: 1px solid var(--border); color: var(--text); border-radius: 8px;
+  padding: 8px 12px; font-size: 13px; outline: none; font-family: inherit;
+}
+input[type=text]:focus, select:focus { border-color: var(--accent); }
+input[type=text] { min-width: 220px; }
+label.check { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); cursor: pointer; white-space: nowrap; }
+label.check input { accent-color: var(--accent); }
+.count-note { font-size: 12px; color: var(--faint); margin-left: auto; }
+.chips { display: flex; gap: 7px; flex-wrap: wrap; }
+.chip {
+  font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; cursor: pointer; user-select: none;
+  border: 1px solid var(--border); color: var(--muted); background: var(--panel2); white-space: nowrap;
+}
+.chip.on { color: var(--text); border-color: var(--accent); background: var(--accent-soft); }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { background: var(--panel2); color: var(--muted); border: 0; padding: 7px 14px; font-size: 12.5px; cursor: pointer; font-family: inherit; font-weight: 500; }
+.seg button.on { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+
+/* Table */
+.table-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.tbl-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: right; font-size: 10.5px; text-transform: uppercase; letter-spacing: .8px; color: var(--faint);
+  padding: 10px 12px; border-bottom: 1px solid var(--divider); cursor: pointer; user-select: none; white-space: nowrap;
+  background: var(--panel2); position: sticky; top: 0; z-index: 2;
+}
+th:hover { color: var(--text); }
+th:first-child, td:first-child { text-align: left; }
+th.sort-asc::after { content: " ▲"; color: var(--accent); } th.sort-desc::after { content: " ▼"; color: var(--accent); }
+td { padding: 9px 12px; text-align: right; font-size: 13px; border-bottom: 1px solid var(--divider); white-space: nowrap; }
+tr.row:hover { background: var(--accent-soft); cursor: pointer; }
+td .sym { font-weight: 700; font-size: 13px; }
+td .sub { display: block; font-size: 10.5px; color: var(--faint); font-weight: 400; max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+.pos { color: var(--up); } .neg { color: var(--down); } .flat { color: var(--muted); }
+.badge { display: inline-block; font-size: 9.5px; font-weight: 900; letter-spacing: .5px; padding: 2px 7px; border-radius: 5px; margin-left: 5px; }
+.b-up { background: var(--up-soft); color: var(--up); } .b-down { background: var(--down-soft); color: var(--down); }
+.b-gold { background: var(--gold-soft); color: var(--gold); }
+.mini-bar { display: inline-block; width: 54px; height: 5px; border-radius: 3px; background: var(--divider); vertical-align: middle; margin-left: 7px; overflow: hidden; }
+.mini-bar > span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.empty { padding: 40px; text-align: center; color: var(--faint); }
+
+/* Drawer */
+.drawer-veil { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 90; opacity: 0; pointer-events: none; transition: opacity .18s; }
+.drawer-veil.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; right: -520px; width: 520px; max-width: 94vw; height: 100%; background: var(--panel);
+  border-left: 1px solid var(--border); z-index: 95; transition: right .22s ease; display: flex; flex-direction: column;
+}
+.drawer.open { right: 0; }
+.drawer-head { padding: 18px 22px 14px; border-bottom: 1px solid var(--divider); }
+.drawer-head .x { float: right; font-size: 20px; color: var(--faint); cursor: pointer; background: none; border: 0; }
+.drawer-head h2 { font-size: 20px; font-weight: 900; letter-spacing: .3px; }
+.drawer-head .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.drawer-head .px { font-size: 15px; margin-top: 6px; font-weight: 700; }
+.drawer-body { overflow-y: auto; padding: 18px 22px 30px; flex: 1; }
+.sec-title { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1px; color: var(--faint); margin: 18px 0 8px; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.stat { background: var(--panel2); border: 1px solid var(--divider); border-radius: 8px; padding: 8px 10px; }
+.stat .v { font-size: 13.5px; font-weight: 700; }
+.stat .k { font-size: 9.5px; color: var(--faint); text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
+.news-item { border: 1px solid var(--divider); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; background: var(--panel2); }
+.news-item .t { font-size: 13px; font-weight: 500; line-height: 1.45; display: block; }
+.news-item .m { font-size: 11px; color: var(--faint); margin-top: 4px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.tagchip { font-size: 9.5px; font-weight: 700; padding: 1px 7px; border-radius: 5px; margin-right: 3px; }
+.drawer-note { font-size: 11.5px; color: var(--faint); margin-top: 8px; line-height: 1.5; }
+
+/* Footer */
+.foot { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--divider); font-size: 11.5px; color: var(--faint); line-height: 1.65; }
+.foot b { color: var(--muted); }
+@media (max-width: 720px) {
+  .topbar-inner, .wrap { padding-left: 14px; padding-right: 14px; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="mark">₹</div>
+      <h1>NIFTY500 <span>MOMENTUM RADAR</span></h1>
+    </div>
+    <div class="meta mono">
+      <span>as of <b id="asOf">—</b></span>
+      <span>refreshed <b id="genAt">—</b> IST</span>
+    </div>
+    <button id="themeToggle" title="theme">◐</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="kpis">
+    <div class="kpi"><div class="n mono" id="kUniverse">—</div><div class="l">Nifty 500 Universe</div><div class="s" id="kComputed">—</div></div>
+    <div class="kpi a"><div class="n mono" id="kQualified">—</div><div class="l">Qualified</div><div class="s" id="kQualifiedSub">above 50 & 200 EMA + vol filter</div></div>
+    <div class="kpi u"><div class="n mono" id="kVolSpike">—</div><div class="l">Volume Spike 2x+</div><div class="s">vs 50-day avg, latest day</div></div>
+    <div class="kpi d"><div class="n mono" id="kMove">—</div><div class="l">4%+ Moves</div><div class="s">latest session, either side</div></div>
+    <div class="kpi g"><div class="n mono" id="kNews">—</div><div class="l">Catalyst Stocks</div><div class="s">news in last 7 days</div></div>
+  </div>
+
+  <div class="controls">
+    <div class="controls-row">
+      <input type="text" id="q" placeholder="Search symbol / sector / industry…">
+      <select id="sector"></select>
+      <select id="volThresh" title="Minimum 30-day average volume">
+        <option value="s30000000" selected>Vol ≥ 3 cr shares</option>
+        <option value="s10000000">Vol ≥ 1 cr shares</option>
+        <option value="s5000000">Vol ≥ 50 lakh shares</option>
+        <option value="s3000000">Vol ≥ 30 lakh shares</option>
+        <option value="v30000000">Turnover ≥ ₹3 cr</option>
+        <option value="v100000000">Turnover ≥ ₹10 cr</option>
+      </select>
+      <div class="seg" id="viewSeg">
+        <button data-v="qualified" class="on">Qualified only</button>
+        <button data-v="all">All 500</button>
+      </div>
+      <label class="check"><input type="checkbox" id="fSpike"> Vol spike 2x</label>
+      <label class="check"><input type="checkbox" id="fMove"> 4%+ move</label>
+      <label class="check"><input type="checkbox" id="fNews"> has news</label>
+      <span class="count-note mono" id="countNote"></span>
+    </div>
+    <div class="controls-row">
+      <span style="font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.8px;">Catalysts</span>
+      <div class="chips" id="catalystChips"></div>
+      <span style="margin-left:auto;font-size:11px;color:var(--faint);" id="sortNote"></span>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr id="theadRow"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="emptyMsg" style="display:none">No stocks match the current filters.</div>
+  </div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<div class="drawer-veil" id="veil"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <button class="x" id="drawerClose">✕</button>
+    <h2 class="mono" id="dSym"></h2>
+    <div class="sub" id="dSub"></div>
+    <div class="px mono" id="dPx"></div>
+  </div>
+  <div class="drawer-body" id="dBody"></div>
+</div>
+
+<script>
+/* ---------- state ---------- */
+let D = null;                       // full dataset
+let view = 'qualified';
+let activeCats = new Set();
+let sortKey = 'volRatio', sortDir = -1;
+const $ = (id) => document.getElementById(id);
+
+function volPass(r) {
+  const v = $('volThresh').value;
+  if (v[0] === 's') return r.avgVol30 >= +v.slice(1);
+  return r.avgVol30 * r.close >= +v.slice(1);
+}
+function isQualified(r) { return r.above50 && r.above200 && volPass(r); }
+
+const CATS = [
+  ['orderWin',   'Order Win',   'var(--up)'],
+  ['launch',     'Launch',      'var(--cyan)'],
+  ['appointment','Appointment', 'var(--violet)'],
+  ['results',    'Results',     'var(--gold)'],
+  ['ma',         'M&A',         'var(--pink)'],
+  ['expansion',  'Expansion',   'var(--orange)'],
+  ['partnership','Partnership', 'var(--accent)'],
+  ['rating',     'Rating',      'var(--orange)'],
+  ['fundraise',  'Fundraise',   'var(--down)'],
+];
+
+const COLS = [
+  { k: 'symbol',      label: 'Stock',       get: r => r.symbol, fmt: (v, r) => `<span class="sym mono">${esc(v)}</span><span class="sub">${esc(r.sector)}</span>` },
+  { k: 'close',      label: 'Price',        get: r => r.close, fmt: v => '₹' + nf(v) },
+  { k: 'dayChangePct', label: 'Day %',      get: r => r.dayChangePct, fmt: v => cls(v, (v > 0 ? '+' : '') + v.toFixed(2) + '%') },
+  { k: 'ema50Gap',   label: 'vs EMA50',     get: r => r.ema50 ? (r.close / r.ema50 - 1) * 100 : null, fmt: v => v === null ? '<span class="flat">—</span>' : cls(v, (v > 0 ? '+' : '') + v.toFixed(1) + '%') },
+  { k: 'ema200Gap',  label: 'vs EMA200',    get: r => r.ema200 ? (r.close / r.ema200 - 1) * 100 : null, fmt: v => v === null ? '<span class="flat">—</span>' : cls(v, (v > 0 ? '+' : '') + v.toFixed(1) + '%') },
+  { k: 'avgVol30',   label: '30d Avg Vol',  get: r => r.avgVol30, fmt: v => nf2(v / 1e7) + ' cr' },
+  { k: 'volRatio',   label: 'Vol vs 50d',   get: r => r.volRatio, fmt: (v, r) => v.toFixed(2) + 'x' + (r.volSpike ? bar(Math.min(v, 5) / 5) : '') },
+  { k: 'pctFrom52wHigh', label: 'From 52wH', get: r => r.pctFrom52wHigh, fmt: v => cls(v, v.toFixed(1) + '%') },
+  { k: 'newsCount',  label: 'News 7d',      get: r => r.news.length, fmt: v => v ? `<b>${v}</b>` : '<span class="flat">—</span>' },
+  { k: 'signals',   label: 'Signals',      get: r => (r.volSpike ? 2 : 0) + (r.move4 ? 1 : 0), fmt: (v, r) =>
+      (r.volSpike ? '<span class="badge b-gold">2X VOL</span>' : '') +
+      (r.move4 ? `<span class="badge ${r.dayChangePct >= 0 ? 'b-up' : 'b-down'}">${Math.abs(r.dayChangePct).toFixed(1)}%</span>` : '') },
+  { k: 'cats',      label: 'Catalysts',    get: r => r.news.reduce((a, n) => { n.tags.forEach(t => a.add(t)); return a; }, new Set()).size,
+    fmt: (v, r) => catChips(r).join(' ') || '<span class="flat">—</span>' },
+];
+
+/* ---------- helpers ---------- */
+function esc(s) { return String(s).replace(/[&<>"']/g, c => String.fromCharCode(38) + '#' + c.charCodeAt(0) + ';'); }
+function nf(v) { return Number(v).toLocaleString('en-IN', { maximumFractionDigits: 2 }); }
+function nf2(v) { return Number(v).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function cls(v, txt) { const s = v > 0 ? 'pos' : (v < 0 ? 'neg' : 'flat'); return `<span class="${s}">${txt}</span>`; }
+function bar(f) { return `<span class="mini-bar"><span style="width:${Math.round(f * 100)}%"></span></span>`; }
+function catColor(cat) { const c = CATS.find(x => x[0] === cat); return c ? c[2] : 'var(--muted)'; }
+function catName(cat) { const c = CATS.find(x => x[0] === cat); return c ? c[1] : cat; }
+function catChips(r) {
+  const counts = {};
+  r.news.forEach(n => n.tags.forEach(t => counts[t] = (counts[t] || 0) + 1));
+  return Object.entries(counts).map(([c, n]) =>
+    `<span class="tagchip" style="color:${catColor(c)};background:color-mix(in oklab, ${catColor(c)} 12%, transparent);">${esc(catName(c))}${n > 1 ? ' ×' + n : ''}</span>`);
+}
+
+/* ---------- render ---------- */
+function buildHead() {
+  const tr = $('theadRow');
+  tr.innerHTML = COLS.map((c, i) =>
+    `<th data-i="${i}" class="${sortKey === c.k ? (sortDir === -1 ? 'sort-desc' : 'sort-asc') : ''}">${c.label}</th>`).join('');
+  tr.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+    const c = COLS[+th.dataset.i];
+    if (sortKey === c.k) sortDir *= -1; else { sortKey = c.k; sortDir = -1; }
+    buildHead(); render();
+  }));
+}
+
+function passesFilters(r) {
+  if (view === 'qualified' && !isQualified(r)) return false;
+  const q = $('q').value.trim().toLowerCase();
+  if (q && !(r.symbol.toLowerCase().includes(q) || r.sector.toLowerCase().includes(q) || r.industry.toLowerCase().includes(q))) return false;
+  if ($('sector').value && r.sector !== $('sector').value) return false;
+  if ($('fSpike').checked && !r.volSpike) return false;
+  if ($('fMove').checked && !r.move4) return false;
+  if ($('fNews').checked && !r.news.length) return false;
+  if (activeCats.size) {
+    const has = r.news.some(n => n.tags.some(t => activeCats.has(t)));
+    if (!has) return false;
+  }
+  return true;
+}
+
+function render() {
+  const rows = D.stocks.filter(passesFilters).slice();
+  const col = COLS.find(c => c.k === sortKey) || COLS[6];
+  rows.sort((a, b) => {
+    let va = col.get(a), vb = col.get(b);
+    if (typeof va === 'string') { va = va.toLowerCase(); vb = (vb || '').toLowerCase(); }
+    if (va === null || va === undefined) va = -1e18;
+    if (vb === null || vb === undefined) vb = -1e18;
+    return (va > vb ? 1 : va < vb ? -1 : 0) * sortDir;
+  });
+  $('tbody').innerHTML = rows.map(r =>
+    `<tr class="row" data-sym="${esc(r.symbol)}">` +
+    COLS.map(c => `<td>${c.fmt(col2val(c, r), r)}</td>`).join('') + '</tr>').join('');
+  $('emptyMsg').style.display = rows.length ? 'none' : 'block';
+  $('countNote').textContent = `${rows.length} / ${D.stocks.length} stocks`;
+  const qCount = D.stocks.filter(isQualified).length;
+  $('kQualified').textContent = qCount;
+  $('kQualifiedSub').textContent = qCount ? 'above 50 & 200 EMA + vol filter'
+    : 'none at current vol threshold — try All 500 or a lower threshold';
+  $('tbody').querySelectorAll('tr.row').forEach(tr =>
+    tr.addEventListener('click', () => openDrawer(tr.dataset.sym)));
+}
+
+function col2val(c, r) { return c.k === 'newsCount' ? r.news.length : c.get(r); }
+
+function openDrawer(sym) {
+  const r = D.stocks.find(x => x.symbol === sym);
+  if (!r) return;
+  $('dSym').textContent = r.symbol;
+  $('dSub').textContent = `${r.sector}${r.industry ? ' · ' + r.industry : ''} · data as of ${r.asOf}`;
+  $('dPx').innerHTML = `₹${nf(r.close)} &nbsp;${cls(r.dayChangePct, (r.dayChangePct > 0 ? '+' : '') + r.dayChangePct.toFixed(2) + '%')}`;
+  const news = r.news;
+  $('dBody').innerHTML = `
+    <div class="sec-title">Key Stats</div>
+    <div class="stat-grid">
+      ${stat(nf(r.close), 'Close ₹')}
+      ${stat((r.dayChangePct > 0 ? '+' : '') + r.dayChangePct.toFixed(2) + '%', 'Day Change')}
+      ${stat(r.ema50 ? '₹' + nf(r.ema50) : '—', 'EMA 50')}
+      ${stat(r.ema200 ? '₹' + nf(r.ema200) : '—', 'EMA 200')}
+      ${stat(r.above50 ? 'Above' : 'Below', 'vs EMA50')}
+      ${stat(r.above200 ? 'Above' : 'Below', 'vs EMA200')}
+      ${stat(nf2(r.avgVol30 / 1e7) + ' cr', '30d Avg Vol')}
+      ${stat(nf2(r.avgVol50 / 1e7) + ' cr', '50d Avg Vol')}
+      ${stat(r.volRatio.toFixed(2) + 'x', 'Vol vs 50d')}
+      ${stat(nf2(r.lastVol / 1e7) + ' cr', 'Latest Day Vol')}
+      ${stat(r.pctFrom52wHigh.toFixed(1) + '%', 'From 52w High')}
+      ${stat(isQualified(r) ? 'Yes' : 'No', 'Qualified')}
+    </div>
+    ${r.volSpike || r.move4 ? `<div class="sec-title">Signals (latest session)</div>
+      <div>${r.volSpike ? '<span class="badge b-gold">2X+ VOLUME</span>' : ''}${r.move4 ? `<span class="badge ${r.dayChangePct >= 0 ? 'b-up' : 'b-down'}">${Math.abs(r.dayChangePct).toFixed(1)}% MOVE</span>` : ''}</div>` : ''}
+    <div class="sec-title">News — last 7 days (${news.length})</div>
+    ${news.length ? news.map(n => `
+      <div class="news-item">
+        <a class="t" href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a>
+        <div class="m mono">
+          <span>${esc(n.source || 'news')}</span>
+          ${n.date ? `<span>${esc(n.date.replace('T', ' '))}</span>` : ''}
+          <span>${n.tags.map(t => `<span class="tagchip" style="color:${catColor(t)};background:color-mix(in oklab, ${catColor(t)} 12%, transparent);">${esc(catName(t))}</span>`).join('') || '<span style="color:var(--faint)">general</span>'}</span>
+        </div>
+      </div>`).join('') : '<div class="drawer-note">No news found in the last 7 days.</div>'}
+    <div class="drawer-note">Headlines are fetched from Google News (India edition) and auto-tagged by keyword — verify details on the linked article before acting. Links open Google News redirects.</div>
+  `;
+  $('drawer').classList.add('open'); $('veil').classList.add('open');
+}
+function stat(v, k) { return `<div class="stat"><div class="v mono">${v}</div><div class="k">${k}</div></div>`; }
+
+function closeDrawer() { $('drawer').classList.remove('open'); $('veil').classList.remove('open'); }
+
+/* ---------- boot ---------- */
+function buildControls() {
+  const sectors = [...new Set(D.stocks.map(r => r.sector))].sort();
+  $('sector').innerHTML = '<option value="">All sectors</option>' + sectors.map(s => `<option>${esc(s)}</option>`).join('');
+  $('catalystChips').innerHTML = CATS.map(([id, name]) =>
+    `<span class="chip" data-cat="${id}">${esc(name)}</span>`).join('');
+  $('catalystChips').querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+    const c = ch.dataset.cat;
+    if (activeCats.has(c)) { activeCats.delete(c); ch.classList.remove('on'); } else { activeCats.add(c); ch.classList.add('on'); }
+    render();
+  }));
+  ['q', 'sector', 'fSpike', 'fMove', 'fNews', 'volThresh'].forEach(id =>
+    $(id).addEventListener('input', render));
+  $('viewSeg').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    view = b.dataset.v;
+    $('viewSeg').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    render();
+  }));
+  $('veil').addEventListener('click', closeDrawer);
+  $('drawerClose').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+}
+
+function buildFoot() {
+  $('foot').innerHTML = `
+  <b>Methodology.</b> Universe: Nifty 500 constituents (NSE). Price/volume: Yahoo Finance daily OHLCV (split/dividend-adjusted), computed on the latest trading session (${esc(D.asOf)}).
+  <b>Qualified</b> = close above both 50-day and 200-day EMA and 30-day average volume passing the selected volume filter (default: 3 crore shares = 30,000,000 — adjustable above; in weak markets very few stocks clear 3 cr shares, so try a lower threshold or turnover-based filter).
+  <b>Volume spike</b> = latest day's volume ≥ 2x the 50-day average. <b>4%+ move</b> = absolute daily change ≥ 4% (either direction).
+  <b>Catalysts</b>: headlines from Google News (India edition) for the last 7 days, auto-tagged by keyword (order win, launch, appointment, results, M&A, expansion, partnership, rating, fundraise) — classification is heuristic, verify on the linked article.
+  Data refreshed daily around 19:00 IST via GitHub Actions (exact timing subject to GitHub scheduler). This is a research tool, not investment advice.
+  Sources: Yahoo Finance · Google News · NSE index constituents.`;
+}
+
+function boot() {
+  fetch('data/momentum.json', { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(data => {
+      D = data;
+      const st = D.stats;
+      $('asOf').textContent = D.asOf || '—';
+      $('genAt').textContent = (D.generatedAt || '').replace('T', ' ').slice(0, 16);
+      $('kUniverse').textContent = st.universe;
+      $('kComputed').textContent = `${st.computed} with price data${st.failed && st.failed.length ? ' · ' + st.failed.length + ' unavailable' : ''}`;
+      $('kVolSpike').textContent = st.volSpikes;
+      $('kMove').textContent = st.move4;
+      $('kNews').textContent = st.withNews;
+      buildControls(); buildHead(); buildFoot(); render();
+    })
+    .catch(e => {
+      document.querySelector('.wrap').innerHTML =
+        '<div class="empty" style="padding:80px 20px">Failed to load data: ' + esc(e.message) +
+        '<br><br><button onclick="location.reload()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--panel);color:var(--text);cursor:pointer">Retry</button></div>';
+    });
+}
+
+/* theme */
+(function () {
+  const t = document.querySelector('#themeToggle'), r = document.documentElement;
+  let d = matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark';
+  r.setAttribute('data-theme', d);
+  t.addEventListener('click', () => { d = d === 'dark' ? 'light' : 'dark'; r.setAttribute('data-theme', d); });
+})();
+
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>

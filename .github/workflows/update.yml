@@ -1,0 +1,90 @@
+name: Update momentum data
+
+on:
+  schedule:
+    # 14:00 IST nominal — hedge schedule. GitHub's scheduler can delay cron runs by
+    # hours (observed 3-6h delays), so this earlier trigger aims to have data ready
+    # for the 8-9 PM IST prep window. Exact timing not guaranteed.
+    - cron: "30 8 * * *"
+    # 19:00 IST nominal — in practice may run late, serving as an overnight top-up.
+    - cron: "30 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: update-momentum
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run data pipeline
+        run: python3 pipeline.py --workers 2
+        # pipeline exits non-zero if the data-quality gate fails (no commit, no deploy)
+
+      - name: Data quality gate
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          d = json.load(open("data/momentum.json"))
+          computed = d["stats"]["computed"]
+          spikes, moves = d["stats"]["volSpikes"], d["stats"]["move4"]
+          print(f"gate: {computed} stocks computed, {spikes} vol spikes, {moves} 4%+ moves")
+          if computed < 300 or spikes + moves < 5:
+              print("REFRESH LOOKS DEGRADED - keeping previous dataset")
+              sys.exit(1)
+          EOF
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/momentum.json constituents.csv
+          if git diff --cached --quiet; then
+            echo "No data changes to commit"
+          else
+            git commit -m "data: refresh $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+  deploy-pages:
+    needs: update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master   # latest data commit (the run may have pushed one)
+
+      - name: Assemble site
+        run: |
+          mkdir -p site/data
+          cp index.html site/
+          cp data/momentum.json site/data/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - uses: actions/deploy-pages@v4
+        id: deployment
