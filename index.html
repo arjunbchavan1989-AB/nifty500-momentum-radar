@@ -84,6 +84,13 @@ input[type=text]:focus, select:focus { border-color: var(--accent); }
 input[type=text] { min-width: 220px; }
 label.check { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); cursor: pointer; white-space: nowrap; }
 label.check input { accent-color: var(--accent); }
+button.copybtn {
+  background: var(--panel2); border: 1px solid var(--border); color: var(--text); border-radius: 8px;
+  padding: 8px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; white-space: nowrap;
+  font-family: inherit; transition: border-color .15s, color .15s;
+}
+button.copybtn:hover { border-color: var(--accent); color: var(--accent); }
+button.copybtn.copied { border-color: var(--up); color: var(--up); }
 .count-note { font-size: 12px; color: var(--faint); margin-left: auto; }
 .chips { display: flex; gap: 7px; flex-wrap: wrap; }
 .chip {
@@ -197,6 +204,7 @@ td .sub { display: block; font-size: 10.5px; color: var(--faint); font-weight: 4
       <label class="check"><input type="checkbox" id="fSpike"> Vol spike 2x</label>
       <label class="check"><input type="checkbox" id="fMove"> 4%+ move</label>
       <label class="check"><input type="checkbox" id="fNews"> has news</label>
+      <button id="copyBtn" class="copybtn" title="Copy the symbols currently in view">Copy symbols</button>
       <span class="count-note mono" id="countNote"></span>
     </div>
     <div class="controls-row">
@@ -314,6 +322,7 @@ function passesFilters(r) {
   return true;
 }
 
+let lastRows = [];
 function render() {
   const rows = D.stocks.filter(passesFilters).slice();
   const col = COLS.find(c => c.k === sortKey) || COLS[6];
@@ -324,6 +333,7 @@ function render() {
     if (vb === null || vb === undefined) vb = -1e18;
     return (va > vb ? 1 : va < vb ? -1 : 0) * sortDir;
   });
+  lastRows = rows;
   $('tbody').innerHTML = rows.map(r =>
     `<tr class="row" data-sym="${esc(r.symbol)}">` +
     COLS.map(c => `<td>${c.fmt(col2val(c, r), r)}</td>`).join('') + '</tr>').join('');
@@ -403,6 +413,23 @@ function buildControls() {
   }));
   $('veil').addEventListener('click', closeDrawer);
   $('drawerClose').addEventListener('click', closeDrawer);
+  $('copyBtn').addEventListener('click', async () => {
+    const syms = lastRows.map(r => r.symbol);
+    if (!syms.length) return;
+    const txt = syms.join(', ');
+    let ok = false;
+    try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e2) {}
+      ta.remove();
+    }
+    const b = $('copyBtn');
+    b.classList.add('copied');
+    b.textContent = ok ? `Copied ${syms.length} symbols` : 'Copy failed';
+    setTimeout(() => { b.classList.remove('copied'); b.textContent = 'Copy symbols'; }, 1600);
+  });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 }
 
