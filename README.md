@@ -14,7 +14,7 @@ For every Nifty 500 stock (492 currently with price data on Yahoo Finance):
 - **Catalysts**: headlines from the last 7 days (Google News, India edition), auto-tagged by keyword — order win, product/service launch, key-person appointment, results, M&A, expansion, partnership, rating, fundraise — with source links
 - **Context**: % from 52-week high, sector/industry
 
-**Qualified** view = above both the 50 and 200 EMA + passing the volume filter (default: 3 crore shares / 30,000,000 per day over 30 days — adjustable in the UI, since in weak markets very few stocks clear 3 cr shares; turnover-based filters are also available).
+**Qualified** view = above both the 50 and 200 EMA + 30-day average daily traded value (close × volume) ≥ ₹3 crore — the default. Share-count and ₹10 cr turnover thresholds are also available in the filter bar.
 
 ## Auto-update
 

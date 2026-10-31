@@ -3,7 +3,7 @@
 Nifty 500 Momentum Radar - daily data pipeline.
 
 Universe: Nifty 500 constituents.
-Filters: close > EMA50 AND close > EMA200 AND 30-day avg volume >= 3 crore shares.
+Filters: close > EMA50 AND close > EMA200 AND 30-day avg traded value (close x volume) >= 3 crore INR.
 Signals: latest-day volume >= 2x 50-day avg; abs(day change) >= 4%.
 Catalysts: Google News RSS (last 7 days) classified by keywords.
 
@@ -26,7 +26,7 @@ import yfinance as yf
 ROOT = Path(__file__).resolve().parent
 
 # --- Config -----------------------------------------------------------------
-AVG_VOL_30_MIN = 30_000_000     # 3 crore shares (30,000,000) - literal reading
+AVG_TURNOVER_30_MIN = 30_000_000  # 3 crore INR average daily traded value (close x volume)
 VOL_SPIKE_RATIO = 2.0           # vs 50-day avg volume
 MOVE_PCT_MIN = 4.0              # abs day change %
 NEWS_WINDOW_DAYS = 7
@@ -167,8 +167,8 @@ def fetch_prices(symbols):
 
 
 def compute_metrics(sym, df, meta):
-    closes = df["Close"].dropna()
-    vols = df["Volume"].dropna()
+    d = df[["Close", "Volume"]].dropna()
+    closes, vols = d["Close"], d["Volume"]
     if len(closes) < 60 or len(vols) < 30:
         return None
     last = float(closes.iloc[-1])
@@ -177,6 +177,7 @@ def compute_metrics(sym, df, meta):
     ema200 = float(closes.ewm(span=200, adjust=False).mean().iloc[-1]) if len(closes) >= 200 else None
     avg_vol30 = float(vols.iloc[-30:].mean())
     avg_vol50 = float(vols.iloc[-50:].mean()) if len(vols) >= 50 else avg_vol30
+    avg_turnover30 = float((d["Close"] * d["Volume"]).iloc[-30:].mean())
     last_vol = float(vols.iloc[-1])
     day_chg = (last / prev - 1) * 100 if prev else 0.0
     hi52 = float(closes.max())
@@ -192,6 +193,7 @@ def compute_metrics(sym, df, meta):
         "above200": (last > ema200) if ema200 else False,
         "avgVol30": int(avg_vol30),
         "avgVol50": int(avg_vol50),
+        "avgTurnover30": int(avg_turnover30),
         "lastVol": int(last_vol),
         "volRatio": round(last_vol / avg_vol50, 2) if avg_vol50 else 0.0,
         "volSpike": last_vol >= VOL_SPIKE_RATIO * avg_vol50 if avg_vol50 else False,
@@ -200,7 +202,7 @@ def compute_metrics(sym, df, meta):
         "asOf": str(closes.index[-1].date()),
         "news": [],
     }
-    rec["qualified"] = bool(rec["above50"] and rec["above200"] and avg_vol30 >= AVG_VOL_30_MIN)
+    rec["qualified"] = bool(rec["above50"] and rec["above200"] and avg_turnover30 >= AVG_TURNOVER_30_MIN)
     return rec
 
 
@@ -338,7 +340,7 @@ def main():
             timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%dT%H:%M:%S+05:30"),
         "asOf": as_of,
         "config": {
-            "avgVol30Min": AVG_VOL_30_MIN,
+            "avgTurnover30Min": AVG_TURNOVER_30_MIN,
             "volSpikeRatio": VOL_SPIKE_RATIO,
             "movePctMin": MOVE_PCT_MIN,
             "newsWindowDays": NEWS_WINDOW_DAYS,

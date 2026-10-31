@@ -172,7 +172,7 @@ td .sub { display: block; font-size: 10.5px; color: var(--faint); font-weight: 4
 <div class="wrap">
   <div class="kpis">
     <div class="kpi"><div class="n mono" id="kUniverse">—</div><div class="l">Nifty 500 Universe</div><div class="s" id="kComputed">—</div></div>
-    <div class="kpi a"><div class="n mono" id="kQualified">—</div><div class="l">Qualified</div><div class="s" id="kQualifiedSub">above 50 & 200 EMA + vol filter</div></div>
+    <div class="kpi a"><div class="n mono" id="kQualified">—</div><div class="l">Qualified</div><div class="s" id="kQualifiedSub">above 50 & 200 EMA + ₹3cr turnover</div></div>
     <div class="kpi u"><div class="n mono" id="kVolSpike">—</div><div class="l">Volume Spike 2x+</div><div class="s">vs 50-day avg, latest day</div></div>
     <div class="kpi d"><div class="n mono" id="kMove">—</div><div class="l">4%+ Moves</div><div class="s">latest session, either side</div></div>
     <div class="kpi g"><div class="n mono" id="kNews">—</div><div class="l">Catalyst Stocks</div><div class="s">news in last 7 days</div></div>
@@ -182,13 +182,13 @@ td .sub { display: block; font-size: 10.5px; color: var(--faint); font-weight: 4
     <div class="controls-row">
       <input type="text" id="q" placeholder="Search symbol / sector / industry…">
       <select id="sector"></select>
-      <select id="volThresh" title="Minimum 30-day average volume">
-        <option value="s30000000" selected>Vol ≥ 3 cr shares</option>
+      <select id="volThresh" title="Minimum 30-day average volume / traded value">
+        <option value="v30000000" selected>Turnover ≥ ₹3 cr</option>
+        <option value="v100000000">Turnover ≥ ₹10 cr</option>
+        <option value="s30000000">Vol ≥ 3 cr shares</option>
         <option value="s10000000">Vol ≥ 1 cr shares</option>
         <option value="s5000000">Vol ≥ 50 lakh shares</option>
         <option value="s3000000">Vol ≥ 30 lakh shares</option>
-        <option value="v30000000">Turnover ≥ ₹3 cr</option>
-        <option value="v100000000">Turnover ≥ ₹10 cr</option>
       </select>
       <div class="seg" id="viewSeg">
         <button data-v="qualified" class="on">Qualified only</button>
@@ -263,7 +263,7 @@ const COLS = [
   { k: 'dayChangePct', label: 'Day %',      get: r => r.dayChangePct, fmt: v => cls(v, (v > 0 ? '+' : '') + v.toFixed(2) + '%') },
   { k: 'ema50Gap',   label: 'vs EMA50',     get: r => r.ema50 ? (r.close / r.ema50 - 1) * 100 : null, fmt: v => v === null ? '<span class="flat">—</span>' : cls(v, (v > 0 ? '+' : '') + v.toFixed(1) + '%') },
   { k: 'ema200Gap',  label: 'vs EMA200',    get: r => r.ema200 ? (r.close / r.ema200 - 1) * 100 : null, fmt: v => v === null ? '<span class="flat">—</span>' : cls(v, (v > 0 ? '+' : '') + v.toFixed(1) + '%') },
-  { k: 'avgVol30',   label: '30d Avg Vol',  get: r => r.avgVol30, fmt: v => nf2(v / 1e7) + ' cr' },
+  { k: 'avgTurnover30', label: '30d Turnover', get: r => r.avgTurnover30, fmt: v => '₹' + nf2(v / 1e7) + ' cr' },
   { k: 'volRatio',   label: 'Vol vs 50d',   get: r => r.volRatio, fmt: (v, r) => v.toFixed(2) + 'x' + (r.volSpike ? bar(Math.min(v, 5) / 5) : '') },
   { k: 'pctFrom52wHigh', label: 'From 52wH', get: r => r.pctFrom52wHigh, fmt: v => cls(v, v.toFixed(1) + '%') },
   { k: 'newsCount',  label: 'News 7d',      get: r => r.news.length, fmt: v => v ? `<b>${v}</b>` : '<span class="flat">—</span>' },
@@ -333,8 +333,8 @@ function render() {
   $('countNote').textContent = `${rows.length} / ${D.stocks.length} stocks`;
   const qCount = D.stocks.filter(isQualified).length;
   $('kQualified').textContent = qCount;
-  $('kQualifiedSub').textContent = qCount ? 'above 50 & 200 EMA + vol filter'
-    : 'none at current vol threshold — try All 500 or a lower threshold';
+  $('kQualifiedSub').textContent = qCount ? 'above 50 & 200 EMA + ₹3cr turnover'
+    : 'none at current threshold — try All 500 or a lower threshold';
   $('tbody').querySelectorAll('tr.row').forEach(tr =>
     tr.addEventListener('click', () => openDrawer(tr.dataset.sym)));
 }
@@ -359,6 +359,7 @@ function openDrawer(sym) {
       ${stat(r.above200 ? 'Above' : 'Below', 'vs EMA200')}
       ${stat(nf2(r.avgVol30 / 1e7) + ' cr', '30d Avg Vol')}
       ${stat(nf2(r.avgVol50 / 1e7) + ' cr', '50d Avg Vol')}
+      ${stat('₹' + nf2(r.avgTurnover30 / 1e7) + ' cr', '30d Avg Turnover')}
       ${stat(r.volRatio.toFixed(2) + 'x', 'Vol vs 50d')}
       ${stat(nf2(r.lastVol / 1e7) + ' cr', 'Latest Day Vol')}
       ${stat(r.pctFrom52wHigh.toFixed(1) + '%', 'From 52w High')}
@@ -410,7 +411,7 @@ function buildControls() {
 function buildFoot() {
   $('foot').innerHTML = `
   <b>Methodology.</b> Universe: Nifty 500 constituents (NSE). Price/volume: Yahoo Finance daily OHLCV (split/dividend-adjusted), computed on the latest trading session (${esc(D.asOf)}).
-  <b>Qualified</b> = close above both 50-day and 200-day EMA and 30-day average volume passing the selected volume filter (default: 3 crore shares = 30,000,000 — adjustable above; in weak markets very few stocks clear 3 cr shares, so try a lower threshold or turnover-based filter).
+  <b>Qualified</b> = close above both 50-day and 200-day EMA and 30-day average daily traded value (close × volume) ≥ ₹3 crore — the default; share-count and ₹10 cr turnover thresholds are also available in the filter bar.
   <b>Volume spike</b> = latest day's volume ≥ 2x the 50-day average. <b>4%+ move</b> = absolute daily change ≥ 4% (either direction).
   <b>Catalysts</b>: headlines from Google News (India edition) for the last 7 days, auto-tagged by keyword (order win, launch, appointment, results, M&A, expansion, partnership, rating, fundraise) — classification is heuristic, verify on the linked article.
   Data refreshed daily around 19:00 IST via GitHub Actions (exact timing subject to GitHub scheduler). This is a research tool, not investment advice.
