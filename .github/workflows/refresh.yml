@@ -1,4 +1,4 @@
-name: Update momentum data
+name: Refresh momentum data
 
 on:
   schedule:
