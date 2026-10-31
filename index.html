@@ -370,7 +370,7 @@ function openDrawer(sym) {
     <div class="sec-title">News — last 7 days (${news.length})</div>
     ${news.length ? news.map(n => `
       <div class="news-item">
-        <a class="t" href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a>
+        <a class="t" href="${/^https:\/\//.test(n.link || '') ? esc(n.link) : '#'}" target="_blank" rel="noopener">${esc(n.title)}</a>
         <div class="m mono">
           <span>${esc(n.source || 'news')}</span>
           ${n.date ? `<span>${esc(n.date.replace('T', ' '))}</span>` : ''}
