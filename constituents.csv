@@ -1,6 +1,5 @@
 Symbol,Industry,Sector
 360ONE,Financial Services,Wealth Management
-3MINDIA,Diversified,Diversified
 ABB,Capital Goods,Capital Goods - Electrical Equipment
 ACC,Construction Materials,Cement
 ACMESOLAR,Power,Infrastructure Developers & Operators
@@ -13,6 +12,7 @@ AARTIIND,Chemicals,Chemicals
 AAVAS,Financial Services,Housing Finance
 ABBOTINDIA,Healthcare,Pharmaceuticals
 ACE,Capital Goods,Capital Goods-Non Electrical Equipment
+ACUTAAS,Healthcare,Healthcare
 ADANIENSOL,Power,Power Generation & Distribution
 ADANIENT,Metals & Mining,Trading
 ADANIGREEN,Power,Power Generation & Distribution
@@ -20,25 +20,25 @@ ADANIPORTS,Services,Marine Port & Services
 ADANIPOWER,Power,Power Generation & Distribution
 ATGL,Oil Gas & Consumable Fuels,Gas Distribution
 ABCAPITAL,Financial Services,Insurance
-ABFRL,Consumer Services,Consumer Services
-ABREL,Forest Materials,Paper
+ABREL,Realty,Paper
 ABSLAMC,Financial Services,AMC
+CPPLUS,Capital Goods,Capital Goods
 AEGISLOG,Oil Gas & Consumable Fuels,Trading
+AEGISVOPAK,Oil Gas & Consumable Fuels,Oil Gas & Consumable Fuels
+AETHER,Chemicals,Chemicals
 AFCONS,Construction,Infrastructure Developers & Operators
 AFFLE,Information Technology,IT - Software
 AJANTPHARM,Healthcare,Pharmaceuticals
-AKUMS,Healthcare,Healthcare
-APLLTD,Healthcare,Healthcare
-ALIVUS,Healthcare,Healthcare
 ALKEM,Healthcare,Pharmaceuticals
-ALKYLAMINE,Chemicals,Chemicals
-ALOKINDS,Textiles,Textiles
+ABDL,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 ARE&M,Automobile and Auto Components,Auto Ancillaries
 AMBER,Consumer Durables,Consumer Durables
 AMBUJACEM,Construction Materials,Cement
 ANANDRATHI,Financial Services,Wealth Management
 ANANTRAJ,Realty,Realty
 ANGELONE,Financial Services,Stock/ Commodity Brokers
+ANTHEM,Healthcare,Healthcare
+ANURAS,Chemicals,Chemicals
 APARINDS,Capital Goods,Capital Goods - Electrical Equipment
 APOLLOHOSP,Healthcare,Healthcare
 APOLLOTYRE,Automobile and Auto Components,Tyres
@@ -47,17 +47,19 @@ ASAHIINDIA,Automobile and Auto Components,Glass & Glass Products
 ASHOKLEY,Capital Goods,Automobile - 4 Wheelers
 ASIANPAINT,Consumer Durables,Paints/Varnish
 ASTERDM,Healthcare,Healthcare
-ASTRAZEN,Healthcare,Healthcare
 ASTRAL,Capital Goods,Plastic products
+ATHERENERG,Automobile and Auto Components,Automobile and Auto Components
 ATUL,Chemicals,Chemicals
 AUROPHARMA,Healthcare,Pharmaceuticals
 AIIL,Financial Services,AMC
+AVANTIFEED,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 DMART,Consumer Services,Retail
 AXISBANK,Financial Services,Banks - Private
-BASF,Chemicals,Chemicals
+AZAD,Capital Goods,Capital Goods
 BEML,Capital Goods,Aerospace & Defence
 BLS,Consumer Services,IT - Software
 BSE,Financial Services,Financial Services
+BAGMANE,Realty,Realty
 BAJAJ-AUTO,Automobile and Auto Components,Automobile - 2 Wheelers
 BAJFINANCE,Financial Services,NBFC
 BAJAJFINSV,Financial Services,Holding
@@ -70,8 +72,9 @@ BANKBARODA,Financial Services,Banks - Public
 BANKINDIA,Financial Services,Banks - Public
 MAHABANK,Financial Services,Banks - Public
 BATAINDIA,Consumer Durables,Leather
-BAYERCROP,Chemicals,Chemicals
+BELRISE,Automobile and Auto Components,Automobile and Auto Components
 BERGEPAINT,Consumer Durables,Paints/Varnish
+BHARATCOAL,Oil Gas & Consumable Fuels,Oil Gas & Consumable Fuels
 BDL,Capital Goods,Aerospace & Defence
 BEL,Capital Goods,Aerospace & Defence
 BHARATFORG,Automobile and Auto Components,"Castings, Forgings & Fastners"
@@ -79,44 +82,47 @@ BHEL,Capital Goods,Capital Goods - Electrical Equipment
 BPCL,Oil Gas & Consumable Fuels,Refineries
 BHARTIARTL,Telecommunication,Telecomm-Service
 BHARTIHEXA,Telecommunication,Telecomm-Service
-BIKAJI,Fast Moving Consumer Goods,Fast Moving Consumer Goods
+GROWW,Financial Services,Financial Services
 BIOCON,Healthcare,Pharmaceuticals
 BSOFT,Information Technology,IT - Software
-BLUEDART,Services,Services
+BBOX,Information Technology,Information Technology
 BLUESTARCO,Consumer Durables,Consumer Durables
-BBTC,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 BOSCHLTD,Automobile and Auto Components,Auto Ancillaries
 FIRSTCRY,Consumer Services,Retail
 BRIGADE,Realty,Realty
 BRITANNIA,Fast Moving Consumer Goods,FMCG
-MAPMYINDIA,Information Technology,Information Technology
+BIRET,Realty,Realty
 CCL,Fast Moving Consumer Goods,Plantation & Plantation Products
 CESC,Power,Power Generation & Distribution
 CGPOWER,Capital Goods,Capital Goods - Electrical Equipment
+CIEINDIA,Automobile and Auto Components,Automobile and Auto Components
 CRISIL,Financial Services,Credit Rating Agencies
-CAMPUS,Consumer Durables,Consumer Durables
 CANFINHOME,Financial Services,Housing Finance
 CANBK,Financial Services,Banks - Public
+CANHLIFE,Financial Services,Financial Services
 CAPLIPOINT,Healthcare,Pharmaceuticals
 CGCL,Financial Services,NBFC
 CARBORUNIV,Capital Goods,Capital Goods-Non Electrical Equipment
+CARTRADE,Consumer Services,Consumer Services
 CASTROLIND,Oil Gas & Consumable Fuels,Chemicals
 CEATLTD,Automobile and Auto Components,Tyres
+CEMPRO,Construction,Construction
 CENTRALBK,Financial Services,Banks - Public
 CDSL,Financial Services,Financial Services
-CENTURYPLY,Consumer Durables,Consumer Durables
-CERA,Consumer Durables,Consumer Durables
-CHALET,Consumer Services,Consumer Services
+CMPDI,Services,Services
 CHAMBLFERT,Chemicals,Fertilizers
 CHENNPETRO,Oil Gas & Consumable Fuels,Refineries
+CHOICEIN,Financial Services,Financial Services
 CHOLAHLDNG,Financial Services,NBFC
 CHOLAFIN,Financial Services,Holding
 CIPLA,Healthcare,Pharmaceuticals
 CUB,Financial Services,Banks - Private
+CLEANMAX,Power,Power
 CLEAN,Chemicals,Chemicals
 COALINDIA,Oil Gas & Consumable Fuels,Mining & Mineral products
 COCHINSHIP,Capital Goods,Aerospace & Defence
 COFORGE,Information Technology,IT - Software
+COHANCE,Healthcare,Healthcare
 COLPAL,Fast Moving Consumer Goods,FMCG
 CAMS,Financial Services,Financial Services
 CONCORDBIO,Healthcare,Pharmaceuticals
@@ -126,8 +132,8 @@ CRAFTSMAN,Automobile and Auto Components,Auto Ancillaries
 CREDITACC,Financial Services,NBFC
 CROMPTON,Consumer Durables,Consumer Durables
 CUMMINSIND,Capital Goods,Capital Goods-Non Electrical Equipment
+CUPID,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 CYIENT,Information Technology,IT - Software
-DCMSHRIRAM,Diversified,Diversified
 DLF,Realty,Realty
 DOMS,Fast Moving Consumer Goods,Printing & Stationery
 DABUR,Fast Moving Consumer Goods,FMCG
@@ -141,16 +147,18 @@ DIVISLAB,Healthcare,Pharmaceuticals
 DIXON,Consumer Durables,Consumer Durables
 LALPATHLAB,Healthcare,Healthcare
 DRREDDY,Healthcare,Pharmaceuticals
+DUMMYHEG,Capital Goods,Capital Goods
 EIDPARRY,Fast Moving Consumer Goods,Sugar
 EIHOTEL,Consumer Services,Hotels & Restaurants
+EMBASSY,Realty,Realty
 EICHERMOT,Automobile and Auto Components,Automobile - 2 Wheelers
 ELECON,Capital Goods,Capital Goods-Non Electrical Equipment
 ELGIEQUIP,Capital Goods,Capital Goods-Non Electrical Equipment
 EMAMILTD,Fast Moving Consumer Goods,FMCG
 EMCURE,Healthcare,Pharmaceuticals
+EMMVEE,Capital Goods,Capital Goods
 ENDURANCE,Automobile and Auto Components,Auto Ancillaries
 ENGINERSIN,Construction,Infrastructure Developers & Operators
-ERIS,Healthcare,Healthcare
 ESCORTS,Capital Goods,Automobile - 4 Wheelers
 ETERNAL,Consumer Services,E-Commerce/App based Aggregator
 EXIDEIND,Automobile and Auto Components,Auto Ancillaries
@@ -158,13 +166,16 @@ NYKAA,Consumer Services,E-Commerce/App based Aggregator
 FEDERALBNK,Financial Services,Banks - Private
 FACT,Chemicals,Fertilizers
 FINCABLES,Capital Goods,Cables
-FINPIPE,Capital Goods,Capital Goods
 FSL,Services,IT - Software
 FIVESTAR,Financial Services,NBFC
+FORCEMOT,Automobile and Auto Components,Automobile and Auto Components
 FORTIS,Healthcare,Healthcare
+FRACTAL,Information Technology,Information Technology
 GAIL,Oil Gas & Consumable Fuels,Gas Distribution
 GVT&D,Capital Goods,Capital Goods - Electrical Equipment
 GMRAIRPORT,Services,Miscellaneous
+GABRIEL,Automobile and Auto Components,Automobile and Auto Components
+GALLANTT,Capital Goods,Capital Goods
 GRSE,Capital Goods,Aerospace & Defence
 GICRE,Financial Services,Insurance
 GILLETTE,Fast Moving Consumer Goods,FMCG
@@ -172,10 +183,8 @@ GLAND,Healthcare,Pharmaceuticals
 GLAXO,Healthcare,Pharmaceuticals
 GLENMARK,Healthcare,Pharmaceuticals
 MEDANTA,Healthcare,Healthcare
-GODIGIT,Financial Services,Financial Services
 GPIL,Capital Goods,Steel
 GODFRYPHLP,Fast Moving Consumer Goods,Tobacco Products
-GODREJAGRO,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 GODREJCP,Fast Moving Consumer Goods,FMCG
 GODREJIND,Diversified,Chemicals
 GODREJPROP,Realty,Realty
@@ -185,21 +194,18 @@ GRASIM,Construction Materials,Textiles
 GRAVITA,Metals & Mining,Non Ferrous Metals
 GESHIP,Services,Shipping
 FLUOROCHEM,Chemicals,Chemicals
-GUJGASLTD,Oil Gas & Consumable Fuels,Oil Gas & Consumable Fuels
 GMDCLTD,Metals & Mining,Mining & Mineral products
-GNFC,Chemicals,Chemicals
-GPPL,Services,Services
-GSPL,Oil Gas & Consumable Fuels,Oil Gas & Consumable Fuels
-HEG,Capital Goods,Capital Goods
 HBLENGINE,Capital Goods,Auto Ancillaries
 HCLTECH,Information Technology,IT - Software
+HDBFS,Financial Services,Financial Services
 HDFCAMC,Financial Services,AMC
 HDFCBANK,Financial Services,Banks - Private
 HDFCLIFE,Financial Services,Insurance
+HEGAM,Capital Goods,Capital Goods
 HFCL,Telecommunication,Telecomm Equipment & Infra Services
-HAPPSTMNDS,Information Technology,Information Technology
 HAVELLS,Consumer Durables,Consumer Durables
 HEROMOTOCO,Automobile and Auto Components,Automobile - 2 Wheelers
+HEXT,Information Technology,Information Technology
 HSCL,Chemicals,Chemicals
 HINDALCO,Metals & Mining,Non Ferrous Metals
 HAL,Capital Goods,Aerospace & Defence
@@ -214,8 +220,9 @@ HONAUT,Capital Goods,Electronics
 HUDCO,Financial Services,Housing Finance
 HYUNDAI,Automobile and Auto Components,Automobile - 4 Wheelers
 ICICIBANK,Financial Services,Banks - Private
+ICICILIFE,Financial Services,Financial Services
 ICICIGI,Financial Services,Insurance
-ICICIPRULI,Financial Services,Financial Services
+ICICIAMC,Financial Services,Financial Services
 IDBI,Financial Services,Banks - Private
 IDFCFIRSTB,Financial Services,Banks - Private
 IFCI,Financial Services,NBFC
@@ -223,9 +230,9 @@ IIFL,Financial Services,NBFC
 INOXINDIA,Capital Goods,Packaging
 IRB,Construction,Infrastructure Developers & Operators
 IRCON,Construction,Infrastructure Developers & Operators
+ITCHOTELS,Consumer Services,Consumer Services
 ITC,Fast Moving Consumer Goods,Tobacco Products
 ITI,Telecommunication,Aerospace & Defence
-INDGN,Healthcare,Healthcare
 INDIACEM,Construction Materials,Cement
 INDIAMART,Consumer Services,E-Commerce/App based Aggregator
 INDIANB,Financial Services,Banks - Public
@@ -247,15 +254,15 @@ INDIGO,Services,Air Transport Service
 IGIL,Services,Miscellaneous
 IKS,Information Technology,IT - Software
 IPCALAB,Healthcare,Pharmaceuticals
-JBCHEPHARM,Healthcare,Healthcare
 JKCEMENT,Construction Materials,Cement
 JBMA,Automobile and Auto Components,Auto Ancillaries
 JKTYRE,Automobile and Auto Components,Tyres
 JMFINANCIL,Financial Services,Wealth Management
+JSWCEMENT,Construction Materials,Construction Materials
 JSWENERGY,Power,Power Generation & Distribution
-JSWHL,Financial Services,Financial Services
 JSWINFRA,Services,Marine Port & Services
 JSWSTEEL,Metals & Mining,Steel
+JAINREC,Metals & Mining,Metals & Mining
 JPPOWER,Power,Power Generation & Distribution
 J&KBANK,Financial Services,Banks - Public
 JINDALSAW,Capital Goods,Steel
@@ -264,19 +271,15 @@ JINDALSTEL,Metals & Mining,Steel
 JIOFIN,Financial Services,NBFC
 JUBLFOOD,Consumer Services,Quick Service Restaurant
 JUBLINGREA,Chemicals,Chemicals
-JUBLPHARMA,Healthcare,Healthcare
 JWL,Capital Goods,Capital Goods-Non Electrical Equipment
-JUSTDIAL,Consumer Services,Consumer Services
-JYOTHYLAB,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 JYOTICNC,Capital Goods,Capital Goods-Non Electrical Equipment
 KPRMILL,Textiles,Readymade Garments/ Apparells
 KEI,Capital Goods,Cables
-KNRCON,Construction,Construction
 KPITTECH,Information Technology,IT - Software
+KSB,Capital Goods,Capital Goods
 KAJARIACER,Consumer Durables,Ceramic Products
 KPIL,Construction,Infrastructure Developers & Operators
 KALYANKJIL,Consumer Durables,"Diamond, Gems and Jewellery"
-KANSAINER,Consumer Durables,Consumer Durables
 KARURVYSYA,Financial Services,Banks - Private
 KAYNES,Capital Goods,Consumer Durables
 KEC,Construction,Infrastructure Developers & Operators
@@ -287,22 +290,23 @@ KOTAKBANK,Financial Services,Banks - Private
 KIMS,Healthcare,Healthcare
 LTF,Financial Services,FMCG
 LTTS,Information Technology,IT - Software
+LGEINDIA,Consumer Durables,Consumer Durables
 LICHSGFIN,Financial Services,Housing Finance
 LTFOODS,Fast Moving Consumer Goods,FMCG
-LTIM,Information Technology,Information Technology
+LTM,Information Technology,Information Technology
 LT,Construction,Infrastructure Developers & Operators
-LATENTVIEW,Information Technology,Information Technology
 LAURUSLABS,Healthcare,Pharmaceuticals
 LEMONTREE,Consumer Services,Hotels & Restaurants
+LENSKART,Consumer Services,Consumer Services
 LICI,Financial Services,Insurance
 LINDEINDIA,Chemicals,Chemicals
 LLOYDSME,Metals & Mining,Mining & Mineral products
+LODHA,Realty,Realty
 LUPIN,Healthcare,Pharmaceuticals
 MMTC,Services,Trading
 MRF,Automobile and Auto Components,Tyres
-LODHA,Realty,Realty
+MTARTECH,Capital Goods,Capital Goods
 MGL,Oil Gas & Consumable Fuels,Gas Distribution
-MAHSEAMLES,Capital Goods,Capital Goods
 M&MFIN,Financial Services,NBFC
 M&M,Automobile and Auto Components,Automobile - 4 Wheelers
 MANAPPURAM,Financial Services,NBFC
@@ -310,11 +314,10 @@ MRPL,Oil Gas & Consumable Fuels,Refineries
 MANKIND,Healthcare,Pharmaceuticals
 MARICO,Fast Moving Consumer Goods,Edible Oil
 MARUTI,Automobile and Auto Components,Automobile - 4 Wheelers
-MASTEK,Information Technology,Information Technology
 MFSL,Financial Services,Insurance
 MAXHEALTH,Healthcare,Healthcare
 MAZDOCK,Capital Goods,Aerospace & Defence
-METROPOLIS,Healthcare,Healthcare
+MEESHO,Consumer Services,Consumer Services
 MINDACORP,Automobile and Auto Components,Auto Ancillaries
 MSUMI,Automobile and Auto Components,Auto Ancillaries
 MOTILALOFS,Financial Services,Stock/ Commodity Brokers
@@ -336,44 +339,45 @@ NAVA,Power,Diversified
 NAVINFLUOR,Chemicals,Chemicals
 NESTLEIND,Fast Moving Consumer Goods,FMCG
 NETWEB,Information Technology,IT - Hardware
-NETWORK18,Media Entertainment & Publication,Media Entertainment & Publication
 NEULANDLAB,Healthcare,Pharmaceuticals
-NEWGEN,Information Technology,Information Technology
 NAM-INDIA,Financial Services,AMC
-NIVABUPA,Financial Services,Financial Services
 NUVAMA,Financial Services,Stock/ Commodity Brokers
+NUVOCO,Construction Materials,Construction Materials
 OBEROIRLTY,Realty,Realty
 ONGC,Oil Gas & Consumable Fuels,Crude Oil & Natural Gas
 OIL,Oil Gas & Consumable Fuels,Crude Oil & Natural Gas
 OLAELEC,Automobile and Auto Components,Automobile - 2 Wheelers
 OLECTRA,Automobile and Auto Components,Automobile - 4 Wheelers
 PAYTM,Financial Services,E-Commerce/App based Aggregator
+ONESOURCE,Healthcare,Healthcare
 OFSS,Information Technology,IT - Software
 POLICYBZR,Financial Services,IT - Software
 PCBL,Chemicals,Chemicals
 PGEL,Consumer Durables,Consumer Durables
 PIIND,Chemicals,Agro Chemicals
 PNBHOUSING,Financial Services,Housing Finance
-PNCINFRA,Construction,Construction
 PTCIL,Capital Goods,"Castings, Forgings & Fastners"
 PVRINOX,Media Entertainment & Publication,Entertainment
 PAGEIND,Textiles,Readymade Garments/ Apparells
+PARADEEP,Chemicals,Chemicals
 PATANJALI,Fast Moving Consumer Goods,Edible Oil
 PERSISTENT,Information Technology,IT - Software
 PETRONET,Oil Gas & Consumable Fuels,Gas Distribution
-PFIZER,Healthcare,Healthcare
 PHOENIXLTD,Realty,Realty
+PWL,Consumer Services,Consumer Services
 PIDILITIND,Chemicals,Chemicals
-PEL,Financial Services,Financial Services
+PINELABS,Financial Services,Financial Services
+PIRAMALFIN,Financial Services,Financial Services
 PPLPHARMA,Healthcare,Pharmaceuticals
 POLYMED,Healthcare,Healthcare
 POLYCAB,Capital Goods,Cables
 POONAWALLA,Financial Services,NBFC
 PFC,Financial Services,Term-Lending Institutions
 POWERGRID,Power,Power Generation & Distribution
-PRAJIND,Capital Goods,Capital Goods
 PREMIERENE,Capital Goods,Capital Goods - Electrical Equipment
 PRESTIGE,Realty,Realty
+PFOCUS,Media Entertainment & Publication,Media Entertainment & Publication
+PRIVISCL,Chemicals,Chemicals
 PNB,Financial Services,Banks - Public
 RRKABEL,Capital Goods,Cables
 RBLBANK,Financial Services,Banks - Private
@@ -385,73 +389,69 @@ RVNL,Construction,Infrastructure Developers & Operators
 RAILTEL,Telecommunication,Telecomm-Service
 RAINBOW,Healthcare,Healthcare
 RKFORGE,Automobile and Auto Components,"Castings, Forgings & Fastners"
-RCF,Chemicals,Chemicals
-RTNINDIA,Consumer Services,Consumer Services
-RAYMONDLSL,Textiles,Textiles
-RAYMOND,Realty,Realty
 REDINGTON,Services,Trading
 RELIANCE,Oil Gas & Consumable Fuels,Refineries
 RPOWER,Power,Power Generation & Distribution
-ROUTE,Telecommunication,Telecommunication
-SBFC,Financial Services,Financial Services
+RUBICON,Healthcare,Healthcare
 SBICARD,Financial Services,NBFC
 SBILIFE,Financial Services,Insurance
 SJVN,Power,Power Generation & Distribution
-SKFINDIA,Capital Goods,Capital Goods
+SHRIPISTON,Automobile and Auto Components,Automobile and Auto Components
 SRF,Chemicals,Chemicals
 SAGILITY,Information Technology,IT - Software
 SAILIFE,Healthcare,Pharmaceuticals
 SAMMAANCAP,Financial Services,Housing Finance
 MOTHERSON,Automobile and Auto Components,Auto Ancillaries
-SAPPHIRE,Consumer Services,Consumer Services
+SANSERA,Automobile and Auto Components,Automobile and Auto Components
 SARDAEN,Metals & Mining,Steel
-SAREGAMA,Media Entertainment & Publication,Media Entertainment & Publication
 SCHAEFFLER,Automobile and Auto Components,Bearings
 SCHNEIDER,Capital Goods,Capital Goods - Electrical Equipment
 SCI,Services,Shipping
 SHREECEM,Construction Materials,Cement
-RENUKA,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 SHRIRAMFIN,Financial Services,NBFC
 SHYAMMETL,Capital Goods,Steel
+ENRIN,Capital Goods,Capital Goods
 SIEMENS,Capital Goods,Capital Goods - Electrical Equipment
 SIGNATURE,Realty,Realty
 SOBHA,Realty,Realty
 SOLARINDS,Chemicals,Aerospace & Defence
 SONACOMS,Automobile and Auto Components,Auto Ancillaries
-SONATSOFTW,Information Technology,Information Technology
 STARHEALTH,Financial Services,Insurance
 SBIN,Financial Services,Banks - Public
 SAIL,Metals & Mining,Steel
-SWSOLAR,Construction,Construction
+STLTECH,Telecommunication,Telecommunication
 SUMICHEM,Chemicals,Agro Chemicals
 SUNPHARMA,Healthcare,Pharmaceuticals
 SUNTV,Media Entertainment & Publication,Entertainment
 SUNDARMFIN,Financial Services,NBFC
-SUNDRMFAST,Automobile and Auto Components,Automobile and Auto Components
 SUPREMEIND,Capital Goods,Plastic products
-SUVENPHAR,Healthcare,Healthcare
 SUZLON,Capital Goods,Capital Goods - Electrical Equipment
-SWANENERGY,Chemicals,Chemicals
+SWANCORP,Chemicals,Chemicals
 SWIGGY,Consumer Services,E-Commerce/App based Aggregator
 SYNGENE,Healthcare,Healthcare
 SYRMA,Capital Goods,Electronics
 TBOTEK,Consumer Services,E-Commerce/App based Aggregator
+TDPOWERSYS,Capital Goods,Capital Goods
 TVSMOTOR,Automobile and Auto Components,Automobile - 2 Wheelers
-TANLA,Information Technology,Information Technology
+TATACAP,Financial Services,Financial Services
 TATACHEM,Chemicals,Chemicals
 TATACOMM,Telecommunication,Telecomm-Service
 TCS,Information Technology,IT - Software
 TATACONSUM,Fast Moving Consumer Goods,Plantation & Plantation Products
 TATAELXSI,Information Technology,IT - Software
 TATAINVEST,Financial Services,NBFC
-TATAMOTORS,Automobile and Auto Components,Automobile and Auto Components
+TMCV,Capital Goods,Capital Goods
+TMPV,Automobile and Auto Components,Automobile and Auto Components
 TATAPOWER,Power,Power Generation & Distribution
 TATASTEEL,Metals & Mining,Steel
 TATATECH,Information Technology,IT - Software
 TTML,Telecommunication,Telecomm-Service
 TECHM,Information Technology,IT - Software
 TECHNOE,Construction,Infrastructure Developers & Operators
+TEGA,Capital Goods,Capital Goods
 TEJASNET,Telecommunication,Telecomm Equipment & Infra Services
+TENNIND,Automobile and Auto Components,Automobile and Auto Components
+THANGAMAYL,Consumer Durables,Consumer Durables
 NIACL,Financial Services,Insurance
 RAMCOCEM,Construction Materials,Cement
 THERMAX,Capital Goods,Capital Goods-Non Electrical Equipment
@@ -463,7 +463,6 @@ TORNTPOWER,Power,Power Generation & Distribution
 TARIL,Capital Goods,Capital Goods - Electrical Equipment
 TRENT,Consumer Services,Retail
 TRIDENT,Textiles,Textiles
-TRIVENI,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 TRITURBINE,Capital Goods,Capital Goods - Electrical Equipment
 TIINDIA,Automobile and Auto Components,Steel
 UCOBANK,Financial Services,Banks - Public
@@ -474,13 +473,15 @@ ULTRACEMCO,Construction Materials,Cement
 UNIONBANK,Financial Services,Banks - Public
 UBL,Fast Moving Consumer Goods,Alcoholic Beverages
 UNITDSPR,Fast Moving Consumer Goods,Alcoholic Beverages
+URBANCO,Consumer Services,Consumer Services
 USHAMART,Capital Goods,Steel
-VGUARD,Consumer Durables,Consumer Durables
-DBREALTY,Consumer Services,Consumer Services
 VTL,Textiles,Textiles
 VBL,Fast Moving Consumer Goods,FMCG
-MANYAVAR,Consumer Services,Consumer Services
+VAML,Metals & Mining,Metals & Mining
+VISL,Metals & Mining,Metals & Mining
 VEDL,Metals & Mining,Mining & Mineral products
+VOGL,Oil Gas & Consumable Fuels,Oil Gas & Consumable Fuels
+VEDPOWER,Power,Power
 VIJAYA,Healthcare,Healthcare
 VMM,Consumer Services,Retail
 IDEA,Telecommunication,Telecomm-Service
@@ -488,7 +489,6 @@ VOLTAS,Consumer Durables,Consumer Durables
 WAAREEENER,Capital Goods,Capital Goods - Electrical Equipment
 WELCORP,Capital Goods,Steel
 WELSPUNLIV,Textiles,Textiles
-WESTLIFE,Consumer Services,Consumer Services
 WHIRLPOOL,Consumer Durables,Consumer Durables
 WIPRO,Information Technology,IT - Software
 WOCKPHARMA,Healthcare,Pharmaceuticals
@@ -498,4 +498,5 @@ ZEEL,Media Entertainment & Publication,Entertainment
 ZENTEC,Capital Goods,Aerospace & Defence
 ZENSARTECH,Information Technology,IT - Software
 ZYDUSLIFE,Healthcare,Pharmaceuticals
+ZYDUSWELL,Fast Moving Consumer Goods,Fast Moving Consumer Goods
 ECLERX,Services,IT - Software
