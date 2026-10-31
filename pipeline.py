@@ -206,6 +206,33 @@ def compute_metrics(sym, df, meta):
     return rec
 
 
+# --- Price history (for drawer candlestick charts) ---------------------------
+
+HISTORY_BARS = 140  # ~6.5 months of sessions; UI shows the last ~126
+
+def build_history(prices):
+    """Compact OHLCV arrays per symbol for the drawer's 6-month chart."""
+    hist = {}
+    for sym, df in prices.items():
+        try:
+            d = df[["Open", "High", "Low", "Close", "Volume"]].dropna()
+        except KeyError:
+            continue
+        if len(d) < 30:
+            continue
+        d = d.iloc[-HISTORY_BARS:]
+        hist[sym] = {
+            "t": [int(ts.timestamp() // 86400) for ts in d.index],
+            "o": [round(float(x), 2) for x in d["Open"]],
+            "h": [round(float(x), 2) for x in d["High"]],
+            "l": [round(float(x), 2) for x in d["Low"]],
+            "c": [round(float(x), 2) for x in d["Close"]],
+            "v": [int(x) for x in d["Volume"]],
+        }
+    log(f"history: {len(hist)} symbols, {HISTORY_BARS} bars max")
+    return hist
+
+
 # --- News -------------------------------------------------------------------
 
 def classify(title):
@@ -292,6 +319,7 @@ def fetch_all_news(records, workers=6):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(ROOT / "data" / "momentum.json"))
+    ap.add_argument("--history-out", default=str(ROOT / "data" / "history.json"))
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--skip-news", action="store_true")
     args = ap.parse_args()
@@ -353,6 +381,10 @@ def main():
     with open(out, "w", encoding="utf-8") as f:
         json.dump(doc, f, ensure_ascii=False, separators=(",", ":"))
     log(f"wrote {out} ({out.stat().st_size / 1024:.0f} KB)")
+    hist_out = Path(args.history_out)
+    with open(hist_out, "w", encoding="utf-8") as f:
+        json.dump(build_history(prices), f, separators=(",", ":"))
+    log(f"wrote {hist_out} ({hist_out.stat().st_size / 1024:.0f} KB)")
     log(f"stats: {json.dumps(stats, default=str)[:400]}")
 
     # quality gate signal for CI (volume threshold is strict in corrections;

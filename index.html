@@ -150,6 +150,9 @@ td .sub { display: block; font-size: 10.5px; color: var(--faint); font-weight: 4
 .news-item .m { font-size: 11px; color: var(--faint); margin-top: 4px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .tagchip { font-size: 9.5px; font-weight: 700; padding: 1px 7px; border-radius: 5px; margin-right: 3px; }
 .drawer-note { font-size: 11.5px; color: var(--faint); margin-top: 8px; line-height: 1.5; }
+.chart-box { background: var(--panel2); border: 1px solid var(--border); border-radius: 10px; padding: 6px 6px 2px; margin-bottom: 14px; }
+.chart-box svg { display: block; width: 100%; height: auto; }
+.chart-loading { font-size: 12px; color: var(--faint); text-align: center; padding: 28px 0; }
 
 /* Footer */
 .foot { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--divider); font-size: 11.5px; color: var(--faint); line-height: 1.65; }
@@ -357,6 +360,8 @@ function openDrawer(sym) {
   $('dPx').innerHTML = `₹${nf(r.close)} &nbsp;${cls(r.dayChangePct, (r.dayChangePct > 0 ? '+' : '') + r.dayChangePct.toFixed(2) + '%')}`;
   const news = r.news;
   $('dBody').innerHTML = `
+    <div class="sec-title">6-Month Chart</div>
+    <div class="chart-box" id="chartBox"><div class="chart-loading">Loading chart…</div></div>
     <div class="sec-title">Key Stats</div>
     <div class="stat-grid">
       ${stat(nf(r.close), 'Close ₹')}
@@ -388,6 +393,70 @@ function openDrawer(sym) {
     <div class="drawer-note">Headlines are fetched from Google News (India edition) and auto-tagged by keyword — verify details on the linked article before acting. Links open Google News redirects.</div>
   `;
   $('drawer').classList.add('open'); $('veil').classList.add('open');
+  loadChart(sym);
+}
+
+/* ---------- candlestick chart (6 months, from data/history.json) ---------- */
+let HIST = null;
+async function loadChart(sym) {
+  const box = $('chartBox');
+  if (!box) return;
+  try {
+    if (!HIST) HIST = await (await fetch('data/history.json')).json();
+  } catch (e) {
+    box.innerHTML = '<div class="chart-loading">Chart data unavailable.</div>';
+    return;
+  }
+  const h = HIST[sym];
+  if (!h || !h.c || h.c.length < 10) {
+    box.innerHTML = '<div class="chart-loading">No chart data for this stock.</div>';
+    return;
+  }
+  box.innerHTML = candleSVG(h);
+}
+
+function candleSVG(h) {
+  const N = Math.min(126, h.c.length);          // ~6 months of sessions
+  const s = h.c.length - N;
+  const t = h.t.slice(s), o = h.o.slice(s), hi = h.h.slice(s), lo = h.l.slice(s), c = h.c.slice(s), v = h.v.slice(s);
+  const k = 2 / 51;                              // EMA50
+  let e = h.c[0]; const emaFull = [e];
+  for (let i = 1; i < h.c.length; i++) { e = h.c[i] * k + e * (1 - k); emaFull.push(e); }
+  const ema = emaFull.slice(s);
+  let pMin = Math.min(...lo), pMax = Math.max(...hi);
+  const padP = (pMax - pMin) * 0.06 || 1; pMin -= padP; pMax += padP;
+  const vMax = Math.max(...v, 1);
+  const W = 480, L = 6, R = 46, T = 8, PH = 200, VG = 6, VH = 46;
+  const plotW = W - L - R, Hh = T + PH + VG + VH + 18;
+  const x = i => L + (i + 0.5) * plotW / N;
+  const y = p => T + PH - (p - pMin) / (pMax - pMin) * PH;
+  const bw = Math.max(1.4, plotW / N * 0.62);
+  let g = '';
+  for (let i = 0; i <= 4; i++) {                // price gridlines + labels
+    const p = pMin + (pMax - pMin) * i / 4, yy = y(p);
+    g += `<line x1="${L}" y1="${yy}" x2="${L + plotW}" y2="${yy}" stroke="var(--divider)" stroke-width="1"/>`;
+    g += `<text x="${L + plotW + 5}" y="${yy + 3}" font-size="10" fill="var(--faint)">${p >= 1000 ? (p / 1000).toFixed(1) + 'k' : p.toFixed(p < 50 ? 1 : 0)}</text>`;
+  }
+  const vy = T + PH + VG;                       // volume bars
+  v.forEach((vv, i) => {
+    const hgt = vv / vMax * VH;
+    g += `<rect x="${(x(i) - bw / 2).toFixed(2)}" y="${(vy + VH - hgt).toFixed(2)}" width="${bw.toFixed(2)}" height="${Math.max(0.5, hgt).toFixed(2)}" fill="${c[i] >= o[i] ? 'var(--up)' : 'var(--down)'}" opacity="0.4"/>`;
+  });
+  for (let i = 0; i < N; i++) {                 // candles
+    const up = c[i] >= o[i], col = up ? 'var(--up)' : 'var(--down)';
+    g += `<line x1="${x(i).toFixed(2)}" y1="${y(hi[i]).toFixed(2)}" x2="${x(i).toFixed(2)}" y2="${y(lo[i]).toFixed(2)}" stroke="${col}" stroke-width="1"/>`;
+    const y1 = y(Math.max(o[i], c[i])), y2 = y(Math.min(o[i], c[i]));
+    g += `<rect x="${(x(i) - bw / 2).toFixed(2)}" y="${y1.toFixed(2)}" width="${bw.toFixed(2)}" height="${Math.max(1, y2 - y1).toFixed(2)}" fill="${col}"/>`;
+  }
+  const path = ema.map((e2, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(e2).toFixed(1)}`).join('');
+  g += `<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="1.4"/>`;
+  const fmt = d => new Date(d * 86400e3).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+  for (let i = 0; i <= 4; i++) {                // date axis
+    const idx = Math.round((N - 1) * i / 4);
+    g += `<text x="${Math.min(W - R - 8, Math.max(L + 14, x(idx))).toFixed(1)}" y="${Hh - 5}" font-size="10" fill="var(--faint)" text-anchor="middle">${fmt(t[idx])}</text>`;
+  }
+  g += `<text x="${L + 2}" y="${T + 11}" font-size="10" fill="var(--accent)">EMA 50</text>`;
+  return `<svg viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="6-month candlestick chart">${g}</svg>`;
 }
 function stat(v, k) { return `<div class="stat"><div class="v mono">${v}</div><div class="k">${k}</div></div>`; }
 

@@ -55,7 +55,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/momentum.json constituents.csv
+          git add data/momentum.json data/history.json constituents.csv
           if git diff --cached --quiet; then
             echo "No data changes to commit"
           else
@@ -79,6 +79,7 @@ jobs:
           mkdir -p site/data
           cp index.html site/
           cp data/momentum.json site/data/
+          cp data/history.json site/data/
 
       - uses: actions/configure-pages@v5
 
